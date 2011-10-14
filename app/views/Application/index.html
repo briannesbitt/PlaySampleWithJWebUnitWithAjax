@@ -1,4 +1,60 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-#{welcome /}
+<h2>Add an Event</h2>
+
+<div style="position:relative">
+
+   <div>
+      Title: <input type="text" id="title" name="title" />
+      <input type="button" id="createEvent" value="Create" />
+   </div>
+
+   <div style="position:absolute;top:-5px;left:280px">
+      <div id="error" class="error hide"></div>
+      <div id="success" class="success hide"></div>
+   </div>
+
+</div>
+
+<script>
+   var getAddEventUrl = #{jsAction @Events.add(':title') /}
+
+   $(document).ready(function()
+   {
+      $(".hide").hide();
+      refreshEvents();
+
+      $("#createEvent").click( function() {
+         $.ajax( { url: getAddEventUrl({'title':$("#title").val()}), success: createEventComplete } );
+      } );
+   });
+
+   function createEventComplete(data)
+   {
+      var element;
+      if(data.status == "OK")
+      {
+         element = $("#success");
+      }
+      else
+      {
+         element = $("#error");
+      }
+
+      element.html(data.msg);
+      element.fadeIn('fast', function() { element.fadeOut(5000); });
+
+      refreshEvents();
+   }
+
+   function refreshEvents()
+   {
+      $.ajax( { url: "@{Events.list()}", success: function(htmlSnippet) { $("#events").html(htmlSnippet); } } );
+   }
+
+</script>
+
+<h2>Upcoming Events</h2>
+
+<div id="events"></div>
