@@ -1,0 +1,22 @@
+h1. Play framework sample application with JWebUnit and asynchronous ajax
+
+It was requested on the google groups to share a sample application showing how to make your ajax calls synchronous to enable more predictive testing using JWebUnit.  This removes the necessity of using a random Thread.sleep(X) to wait for the ajax call to be done.
+
+Here is the "google group thread":https://groups.google.com/d/topic/play-framework/ut9DQ1numsA/discussion
+
+h2. Try it out for yourself.
+
+bc. git clone git://github.com/briannesbitt/PlaySampleWithJWebUnitWithAjax.git
+play autotest
+
+You can also run @play test@ and then browse to @http://127.0.0.1:9000@ to try it or @http://127.0.0.1:9000/@tests@ to run the tests manually.
+
+h2. Lets look at the tests
+
+There are 4 simple tests in the "test\ApplicationTest.java":https://github.com/briannesbitt/PlaySampleWithJWebUnitWithAjax/blob/master/test/ApplicationTest.java file. The first test @testIndex()@ is a simple test to ensure the index "/" page gets rendered properly and just checks a few html elements on the page.
+
+The second test @testAddEventBlankTitle()@ tries to submit the form using ajax but with no title value.  We want to check the @<div id="error">@ for the error message, but we have to wait for a length of time to allow the ajax call to complete.  I choose 2 seconds since that "seemed" like a reasonable amout of time.
+
+The third test @testAddEventAjaxAsync()@ successfully submits a new Event via ajax.  Again we need to @Thread.sleep(2000)@ to wait for the ajax call to return so we can assert the @<div id="success">@ has some success nofication text.
+
+The final test @testAddEventAjaxSync()@ successfully submits a new Event via ajax, but this time we have setup an instance of @NicelyResynchronizingAjaxController@ as the testing engine ajax controller.  This make the ajax call synchronous.  This allows us to avoid the unknown length of @Thread.sleep()@ time and  we can continue our test ensuring that the @<div id="success">@ gets populated correctly and infact there is a new Event in the db.
