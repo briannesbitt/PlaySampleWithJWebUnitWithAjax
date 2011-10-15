@@ -1,17 +1,69 @@
-import org.junit.*;
-import play.test.*;
-import play.mvc.*;
-import play.mvc.Http.*;
-import models.*;
+import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
+import models.Event;
+import net.sourceforge.jwebunit.htmlunit.HtmlUnitTestingEngineImpl;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ApplicationTest extends FunctionalTest {
+import java.util.List;
 
-    @Test
-    public void testThatIndexPageWorks() {
-        Response response = GET("/");
-        assertIsOk(response);
-        assertContentType("text/html", response);
-        assertCharset(play.Play.defaultWebEncoding, response);
-    }
-    
+public class ApplicationTest extends BaseFunctionalTest
+{
+   @Before
+   public void deleteEvents()
+   {
+      Event.deleteAll();
+   }
+   @Test
+   public void testIndex()
+   {
+      wt.beginAt(getRoute("Application.index"));
+      wt.assertElementPresent("createEvent");
+      wt.assertTextInElement("error", "");
+      wt.assertTextInElement("success", "");
+      wt.assertTextInElement("events", "");
+   }
+   @Test
+   public void testAddEventBlankTitle() throws InterruptedException
+   {
+      wt.beginAt(getRoute("Application.index"));
+      wt.setTextField("title", "");
+      wt.clickButton("createEvent");
+
+      Thread.sleep(2000);  //  <--- Required since you have to wait for the round trip !!
+
+      wt.assertTextInElement("error", "Required");
+      wt.assertTextInElement("success", "");
+      wt.assertTextInElement("events", "");
+   }
+   @Test
+   public void testAddEventAjaxAsync() throws InterruptedException
+   {
+      wt.beginAt(getRoute("Application.index"));
+      wt.setTextField("title", "My New Event");
+      wt.clickButton("createEvent");
+
+      Thread.sleep(2000);  //  <--- Required since you have to wait for the round trip !!
+
+      wt.assertTextInElement("error", "");
+      wt.assertTextInElement("success", "Created Event with Id:");
+      assertEquals(1, Event.count());
+   }
+   @Test
+   public void testAddEventAjaxSync()
+   {
+      wt.beginAt(getRoute("Application.index"));
+
+      // This will make the ajax call synchronous - no more Thread.sleep() !
+      if (wt.getTestingEngine() instanceof HtmlUnitTestingEngineImpl)
+      {
+         ((HtmlUnitTestingEngineImpl) wt.getTestingEngine()).getWebClient().setAjaxController(new NicelyResynchronizingAjaxController());
+      }
+
+      wt.setTextField("title", "My New Event Title");
+      wt.clickButton("createEvent");                  //  <--- ajax call becomes synchronous
+      wt.assertTextInElement("error", "");
+      assertEquals(1, Event.count());
+      List<Event> events = Event.findAll();
+      wt.assertTextInElement("success", "Created Event with Id:" + events.get(0).id);
+   }
 }

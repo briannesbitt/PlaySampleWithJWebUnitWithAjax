@@ -25,7 +25,7 @@ public class Events extends Controller
    }
    public static void list()
    {
-      List<Event> events = Event.all().fetch();
+      List<Event> events = Event.findAll();
       render(events);
    }
 }
