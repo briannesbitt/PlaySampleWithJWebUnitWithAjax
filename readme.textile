@@ -9,7 +9,7 @@ h2. Try it out for yourself.
 bc. git clone git://github.com/briannesbitt/PlaySampleWithJWebUnitWithAjax.git
 play autotest
 
-You can also run @play test@ and then browse to @http://127.0.0.1:9000@ to try it or @http://127.0.0.1:9000/@tests@ to run the tests manually.
+You can also run @play test@ and then browse to @http://127.0.0.1:9000@ to try it or <code>http://127.0.0.1:9000/@tests</code> to run the tests manually.
 
 h2. Lets look at the tests
 
