@@ -1,4 +1,4 @@
-h1. Play framework sample application with JWebUnit and asynchronous ajax
+h1. Play framework sample application with JWebUnit and synchronous ajax
 
 It was requested on the google groups to share a sample application showing how to make your ajax calls synchronous to enable more predictive testing using JWebUnit.  This removes the necessity of using a random Thread.sleep(X) to wait for the ajax call to be done.
 
