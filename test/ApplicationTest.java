@@ -14,7 +14,7 @@ public class ApplicationTest extends BaseFunctionalTest
       Event.deleteAll();
    }
    @Test
-   public void testIndex()
+   public void testIndexRendersSuccessfully()
    {
       wt.beginAt(getRoute("Application.index"));
       wt.assertElementPresent("createEvent");
@@ -22,7 +22,7 @@ public class ApplicationTest extends BaseFunctionalTest
       assertEquals(wt.getElementById("success").getTextContent(), "");
    }
    @Test
-   public void testAddEventBlankTitle() throws InterruptedException
+   public void testCreateEventFailsWithBlankTitle() throws InterruptedException
    {
       wt.beginAt(getRoute("Application.index"));
       wt.setTextField("title", "");
@@ -34,7 +34,7 @@ public class ApplicationTest extends BaseFunctionalTest
       assertEquals(wt.getElementById("success").getTextContent(), "");
    }
    @Test
-   public void testAddEventAjaxAsync() throws InterruptedException
+   public void testCreateEventSuccessAjaxAsync() throws InterruptedException
    {
       wt.beginAt(getRoute("Application.index"));
       wt.setTextField("title", "My New Event");
@@ -47,7 +47,7 @@ public class ApplicationTest extends BaseFunctionalTest
       assertEquals(1, Event.count());
    }
    @Test
-   public void testAddEventAjaxSync()
+   public void testCreateEventSuccessAjaxSync()
    {
       wt.beginAt(getRoute("Application.index"));
 
