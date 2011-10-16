@@ -19,10 +19,14 @@ public abstract class BaseFunctionalTest extends FunctionalTest
       {
          ((HtmlUnitTestingEngineImpl) wt.getTestingEngine()).setDefaultBrowserVersion(defaultBrowserVersion);
       }
-      Router.ActionDefinition baseUrl = Router.reverse("Application.index");
-      baseUrl.absolute();
-      wt.setBaseUrl(baseUrl.url);
+      wt.setBaseUrl(getRouteAbsolute("Application.index"));
       wt.getTestingEngine().setIgnoreFailingStatusCodes(false);
+   }
+   protected String getRouteAbsolute(String action)
+   {
+      Router.ActionDefinition route = Router.reverse(action);
+      route.absolute();
+      return route.url;
    }
    protected String getRoute(String action)
    {
