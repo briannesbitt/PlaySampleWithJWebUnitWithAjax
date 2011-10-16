@@ -4,9 +4,10 @@ It was requested on the google groups to share a sample application showing how 
 
 Here is the "google group thread":https://groups.google.com/d/topic/play-framework/ut9DQ1numsA/discussion
 
-h2. Try it out for yourself.
+h2. Try it out for yourself
 
 bc. git clone git://github.com/briannesbitt/PlaySampleWithJWebUnitWithAjax.git
+cd PlaySampleWithJWebUnitWithAjax
 play autotest
 
 You can also run @play test@ and then browse to @http://127.0.0.1:9000@ to try it or <code>http://127.0.0.1:9000/@tests</code> to run the tests manually.
