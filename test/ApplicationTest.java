@@ -18,9 +18,8 @@ public class ApplicationTest extends BaseFunctionalTest
    {
       wt.beginAt(getRoute("Application.index"));
       wt.assertElementPresent("createEvent");
-      wt.assertTextInElement("error", "");
-      wt.assertTextInElement("success", "");
-      wt.assertTextInElement("events", "");
+      assertEquals(wt.getElementById("error").getTextContent(), "");
+      assertEquals(wt.getElementById("success").getTextContent(), "");
    }
    @Test
    public void testAddEventBlankTitle() throws InterruptedException
@@ -32,8 +31,7 @@ public class ApplicationTest extends BaseFunctionalTest
       Thread.sleep(2000);  //  <--- Required since you have to wait for the round trip !!
 
       wt.assertTextInElement("error", "Required");
-      wt.assertTextInElement("success", "");
-      wt.assertTextInElement("events", "");
+      assertEquals(wt.getElementById("success").getTextContent(), "");
    }
    @Test
    public void testAddEventAjaxAsync() throws InterruptedException
@@ -44,7 +42,7 @@ public class ApplicationTest extends BaseFunctionalTest
 
       Thread.sleep(2000);  //  <--- Required since you have to wait for the round trip !!
 
-      wt.assertTextInElement("error", "");
+      assertEquals(wt.getElementById("error").getTextContent(), "");
       wt.assertTextInElement("success", "Created Event with Id:");
       assertEquals(1, Event.count());
    }
@@ -61,7 +59,7 @@ public class ApplicationTest extends BaseFunctionalTest
 
       wt.setTextField("title", "My New Event Title");
       wt.clickButton("createEvent");                  //  <--- ajax call becomes synchronous
-      wt.assertTextInElement("error", "");
+      assertEquals(wt.getElementById("error").getTextContent(), "");
       assertEquals(1, Event.count());
       List<Event> events = Event.findAll();
       wt.assertTextInElement("success", "Created Event with Id:" + events.get(0).id);
